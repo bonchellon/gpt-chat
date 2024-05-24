@@ -103,35 +103,3 @@ button[type="submit"]:hover {
   background-color: white;
   z-index: 10;
 }
-
-.code-block {
-  position: relative;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: #f5f5f5;
-  border-radius: 0.5rem;
-}
-
-.code-block-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.copy-code-btn {
-  display: flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  background-color: #1e90ff;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.copy-code-btn:hover {
-  background-color: #1c86ee;
-}

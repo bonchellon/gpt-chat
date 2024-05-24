@@ -42,23 +42,6 @@ def save_message(user_message, bot_response):
     cursor.close()
     conn.close()
 
-def get_chat_history():
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("SELECT user_message, bot_response, timestamp FROM chat_history ORDER BY timestamp")
-    chat_history = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return [{"user_message": row[0], "bot_response": row[1], "timestamp": row[2].strftime("%Y-%m-%d %H:%M:%S")} for row in chat_history]
-
-def clear_chat_history():
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM chat_history")
-    conn.commit()
-    cursor.close()
-    conn.close()
-
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
@@ -91,6 +74,9 @@ def chat():
         save_message(message, bot_response)
 
         return jsonify({"message": bot_response})
+    except openai.error.OpenAIError as e:
+        print(f"OpenAI Error: {str(e)}")
+        return jsonify({"error": f"Error communicating with OpenAI: {str(e)}"}), 500
     except Exception as e:
         print(f"Error in /chat: {str(e)}")  # Логирование ошибки
         return jsonify({"error": str(e)}), 500

@@ -4,8 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { FaTrashAlt, FaCopy } from 'react-icons/fa';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FaTrashAlt } from 'react-icons/fa';
 import Upload from './Upload';
 
 const Chat = ({ selectedBot }) => {
@@ -14,7 +13,6 @@ const Chat = ({ selectedBot }) => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -104,24 +102,14 @@ const Chat = ({ selectedBot }) => {
                   code({ node, inline, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '');
                     return !inline && match ? (
-                      <div className="code-block">
-                        <div className="code-block-header">
-                          <span>{match[1]}</span>
-                          <CopyToClipboard text={String(children).replace(/\n$/, '')} onCopy={() => setCopied(true)}>
-                            <button className="copy-code-btn">
-                              <FaCopy /> {copied ? 'Copied!' : 'Copy Code'}
-                            </button>
-                          </CopyToClipboard>
-                        </div>
-                        <SyntaxHighlighter
-                          style={prism}
-                          language={match[1]}
-                          PreTag="div"
-                          {...props}
-                        >
-                          {String(children).replace(/\n$/, '')}
-                        </SyntaxHighlighter>
-                      </div>
+                      <SyntaxHighlighter
+                        style={prism}
+                        language={match[1]}
+                        PreTag="div"
+                        {...props}
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
                     ) : (
                       <code className={className} {...props}>
                         {children}
