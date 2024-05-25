@@ -9,6 +9,10 @@
   .home-header {
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .home-chat {
@@ -16,12 +20,12 @@
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
     overflow-y: auto;
+    margin: 1rem 0; /* Добавим отступ сверху и снизу */
   }
   
   .chat-input {
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
-    background-color: #ffffff;
     padding: 1rem;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -30,5 +34,9 @@
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
     margin: 0 auto; /* Центрируем контейнер */
+  }
+  
+  .clear-chat-button {
+    margin-left: 1rem;
   }
   
