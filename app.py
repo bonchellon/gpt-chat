@@ -4,24 +4,25 @@ from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 import os
 import mysql.connector
+from mysql.connector import Error
+from llamaapi import LlamaAPI
 
-load_dotenv()  # Загружаем переменные окружения
+load_dotenv()
 
 app = Flask(__name__, static_folder='build', static_url_path='')
 
-# Инициализируем OpenAI API ключ из переменных окружения
 openai.api_key = os.getenv("OPENAI_API_KEY")
+llama_api_key = os.getenv("LLAMA_API_KEY")
+llama = LlamaAPI(llama_api_key)
 
-# Установим модель по умолчанию на GPT-4
 default_model = "gpt-4"
 
-# Настройка подключения к MySQL
 db_config = {
     'user': os.getenv("DB_USER"),
     'password': os.getenv("DB_PASSWORD"),
     'host': os.getenv("DB_HOST"),
     'database': 'chatdb',
-    'port': int(os.getenv("DB_PORT", 3306))  # Добавляем порт, по умолчанию 3306
+    'port': int(os.getenv("DB_PORT", 3306))
 }
 
 def read_pdf(file):
@@ -32,44 +33,56 @@ def read_pdf(file):
     return text
 
 def save_message(user_message, bot_response):
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO chat_history (user_message, bot_response) VALUES (%s, %s)",
-        (user_message, bot_response)
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO chat_history (user_message, bot_response) VALUES (%s, %s)",
+            (user_message, bot_response)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("Message saved to database")
+    except Error as e:
+        print(f"Error saving message to database: {e}")
 
 def get_chat_history():
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("SELECT user_message, bot_response, timestamp FROM chat_history ORDER BY timestamp")
-    chat_history = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return [{"user_message": row[0], "bot_response": row[1], "timestamp": row[2].strftime("%Y-%m-%d %H:%M:%S")} for row in chat_history]
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SELECT user_message, bot_response, timestamp FROM chat_history ORDER BY timestamp")
+        chat_history = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        print("Chat history fetched from database")
+        return [{"user_message": row[0], "bot_response": row[1], "timestamp": row[2].strftime("%Y-%m-%d %H:%M:%S")} for row in chat_history]
+    except Error as e:
+        print(f"Error fetching chat history from database: {e}")
+        return []
 
 def clear_chat_history():
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM chat_history")
-    conn.commit()
-    cursor.close()
-    conn.close()
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM chat_history")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("Chat history cleared in database")
+    except Error as e:
+        print(f"Error clearing chat history in database: {e}")
 
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
         data = request.form
-        model_id = data.get('bot', default_model)  # Используем модель по умолчанию, если не указано
+        model_id = data.get('bot', default_model)
         message = data['message']
         file = request.files.get('file', None)
 
         if file:
             if file.content_type.startswith('image/'):
-                # Для изображений используем OpenAI API для анализа изображений
                 response = openai.Image.create_variation(
                     image=file,
                     n=1,
@@ -78,21 +91,30 @@ def chat():
                 image_analysis = response['data'][0]['url']
                 message = f"{message}\n\nImage analysis URL: {image_analysis}"
             else:
-                # Для PDF файлов
                 file_text = read_pdf(file)
                 message = f"{message}\n\nFile content:\n{file_text}"
 
-        response = openai.ChatCompletion.create(
-            model=model_id,
-            messages=[{"role": "user", "content": message}]
-        )
+        if model_id == 'llama':
+            api_request_json = {
+                "messages": [
+                    {"role": "user", "content": message},
+                ]
+            }
+            response = llama.run(api_request_json)
+            response_data = response.json()
+            bot_response = response_data['choices'][0]['message']['content']
+        else:
+            response = openai.ChatCompletion.create(
+                model=model_id,
+                messages=[{"role": "user", "content": message}]
+            )
+            bot_response = response.choices[0].message['content']
 
-        bot_response = response.choices[0].message['content']
         save_message(message, bot_response)
 
         return jsonify({"message": bot_response})
     except Exception as e:
-        print(f"Error in /chat: {str(e)}")  # Логирование ошибки
+        print(f"Error in /chat: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/upload', methods=['POST'])
@@ -109,17 +131,17 @@ def upload():
             text = read_pdf(file)
             return jsonify({"text": text})
     except Exception as e:
-        print(f"Error in /upload: {str(e)}")  # Логирование ошибки
+        print(f"Error in /upload: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/bots', methods=['GET'])
 def get_bots():
     try:
-        models = openai.Model.list()  # Получаем список всех моделей
-        model_ids = [model['id'] for model in models['data']]  # Создаем список идентификаторов моделей
+        models = openai.Model.list()
+        model_ids = [model['id'] for model in models['data']]
         return jsonify(model_ids)
     except Exception as e:
-        print(f"Error in /bots: {str(e)}")  # Логирование ошибки
+        print(f"Error in /bots: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/history', methods=['GET'])
@@ -128,7 +150,7 @@ def history():
         chat_history = get_chat_history()
         return jsonify(chat_history)
     except Exception as e:
-        print(f"Error in /history: {str(e)}")  # Логирование ошибки
+        print(f"Error in /history: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/clear', methods=['POST'])
@@ -137,7 +159,31 @@ def clear():
         clear_chat_history()
         return jsonify({"message": "Chat history cleared"})
     except Exception as e:
-        print(f"Error in /clear: {str(e)}")  # Логирование ошибки
+        print(f"Error in /clear: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/test_save')
+def test_save():
+    try:
+        save_message("Test user message", "Test bot response")
+        return jsonify({"message": "Test save successful"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/test_get')
+def test_get():
+    try:
+        chat_history = get_chat_history()
+        return jsonify(chat_history)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/test_clear')
+def test_clear():
+    try:
+        clear_chat_history()
+        return jsonify({"message": "Test clear successful"})
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/')

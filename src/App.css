@@ -2,6 +2,10 @@
   display: flex;
   align-items: center;
 }
+.error-select {
+  color: red;
+  border-color: red;
+}
 
 textarea {
   resize: none;

@@ -1,0 +1,7 @@
+Flask
+openai
+python-dotenv
+PyPDF2
+mysql-connector-python
+requests
+llamaapi

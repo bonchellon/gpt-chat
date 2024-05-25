@@ -4,7 +4,8 @@ import Chat from './Chat';
 import './App.css';
 
 const App = () => {
-  const [selectedBot, setSelectedBot] = useState('gpt-3.5-turbo');
+  // Устанавливаем LLAMA как бот по умолчанию
+  const [selectedBot, setSelectedBot] = useState('llama');
 
   return (
     <div className="App flex flex-col h-screen items-center p-4 bg-white">
