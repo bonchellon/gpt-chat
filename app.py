@@ -194,5 +194,30 @@ def serve():
 def serve_static_files(path):
     return send_from_directory(app.static_folder, path)
 
+@app.route('/check_bot', methods=['POST'])
+def check_bot():
+    try:
+        data = request.get_json()
+        bot = data.get('bot')
+        if bot == 'gpt-4':
+            # Пример проверки работоспособности модели
+            try:
+                response = openai.ChatCompletion.create(
+                    model=bot,
+                    messages=[{"role": "system", "content": "ping"}]
+                )
+                if response.choices:
+                    return jsonify({"working": True})
+                else:
+                    return jsonify({"working": False})
+            except:
+                return jsonify({"working": False})
+        else:
+            return jsonify({"working": True})
+    except Exception as e:
+        print(f"Error in /check_bot: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
