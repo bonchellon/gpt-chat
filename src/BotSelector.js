@@ -5,6 +5,7 @@ const BotSelector = ({ selectedBot, setSelectedBot }) => {
   const [bots, setBots] = useState(['gpt-4', 'llama']); // Изначально содержит 'gpt-4' и 'llama'
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [firstLoad, setFirstLoad] = useState(true); // Новое состояние для проверки первого запуска
 
   useEffect(() => {
     axios.get('/bots')
@@ -23,8 +24,8 @@ const BotSelector = ({ selectedBot, setSelectedBot }) => {
     const selected = e.target.value;
     setSelectedBot(selected);
 
-    if (selected === 'gpt-4') {
-      // Проверка работоспособности gpt-4
+    // Проверка работоспособности gpt-4 только после первого выбора модели
+    if (selected === 'gpt-4' && !firstLoad) {
       axios.post('/check_bot', { bot: 'gpt-4' })
         .then(response => {
           if (!response.data.working) {
@@ -44,13 +45,15 @@ const BotSelector = ({ selectedBot, setSelectedBot }) => {
       setError(false);
       setErrorMessage('');
     }
+    
+    setFirstLoad(false); // Устанавливаем в false после первого выбора модели
   };
 
   return (
     <div className="mb-4 text-center">
       <label className="block mb-2">Select Bot:</label>
       <select
-        className={`p-2 border border-gray-300 rounded ${error ? 'error-select' : ''}`}
+        className={`p-2 border border-gray-300 rounded ${error && !firstLoad ? 'error-select' : ''}`}
         value={selectedBot}
         onChange={handleBotChange}
       >
