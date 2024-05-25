@@ -82,7 +82,7 @@ const Chat = ({ selectedBot }) => {
   }, [chatHistory]);
 
   return (
-    <div className="flex flex-col h-full w-full max-w-2xl mx-auto">
+    <div className="flex flex-col h-full w-full max-w-8xl mx-auto"> {/* Увеличили max-w-2xl до max-w-4xl */}
       <div className="flex justify-between items-center mb-2">
         <button
           className="p-2 bg-red-500 text-white rounded"
