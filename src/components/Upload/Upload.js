@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { FaPaperclip } from 'react-icons/fa';
 import axios from 'axios';
+import './Upload.css';
 
 const Upload = ({ setFile, setFileName }) => {
   const fileInputRef = useRef(null);
@@ -21,7 +22,7 @@ const Upload = ({ setFile, setFileName }) => {
   };
 
   return (
-    <div className="upload mr-2">
+    <div className="upload">
       <input
         type="file"
         ref={fileInputRef}
@@ -31,7 +32,7 @@ const Upload = ({ setFile, setFileName }) => {
       <FaPaperclip
         size={24}
         onClick={() => fileInputRef.current.click()}
-        className="cursor-pointer text-blue-500 hover:text-blue-700"
+        className="upload-icon"
       />
     </div>
   );

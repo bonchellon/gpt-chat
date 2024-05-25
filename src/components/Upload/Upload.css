@@ -1,0 +1,14 @@
+.upload {
+    display: flex;
+    align-items: center;
+  }
+  
+  .upload-icon {
+    cursor: pointer;
+    color: #1e90ff;
+  }
+  
+  .upload-icon:hover {
+    color: #1c86ee;
+  }
+  
