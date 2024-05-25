@@ -19,8 +19,9 @@
     flex: 1;
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
-    overflow-y: auto;
     margin: 1rem 0; /* Добавим отступ сверху и снизу */
+    display: flex;
+    flex-direction: column;
   }
   
   .chat-input {

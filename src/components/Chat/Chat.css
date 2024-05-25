@@ -3,8 +3,10 @@
     border-radius: 0.5rem;
     padding: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px; /* Ограничиваем максимальную ширину */
-    margin: auto; /* Центрируем контейнер */
+    max-width: 100%;
+    margin: auto;
+    flex: 1;
+    overflow-y: auto;
   }
   
   .mb-4 {
@@ -53,10 +55,6 @@
   
   .bg-gray-100 {
     background-color: #f0f0f0;
-  }
-  
-  .bg-gray-200 {
-    background-color: #e0e0e0;
   }
   
   .dots::after {
