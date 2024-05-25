@@ -13,13 +13,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed; /* Фиксируем шапку */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .home-chat {
     flex: 1;
     width: 100%;
     max-width: 800px; /* Ограничиваем максимальную ширину */
-    margin: 1rem 0; /* Добавим отступ сверху и снизу */
+    margin-top: 6rem; /* Отступ сверху, чтобы не перекрывать шапку */
+    margin-bottom: 1rem; /* Добавим отступ снизу */
     display: flex;
     flex-direction: column;
   }
