@@ -8,20 +8,27 @@
   
   .home-header {
     width: 100%;
-    max-width: 4xl;
+    max-width: 800px; /* Ограничиваем максимальную ширину */
   }
   
   .home-chat {
     flex: 1;
     width: 100%;
-    max-width: 8xl;
+    max-width: 800px; /* Ограничиваем максимальную ширину */
     overflow-y: auto;
   }
   
   .chat-input {
     width: 100%;
+    max-width: 800px; /* Ограничиваем максимальную ширину */
     background-color: #ffffff;
     padding: 1rem;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 800px; /* Ограничиваем максимальную ширину */
+    margin: 0 auto; /* Центрируем контейнер */
   }
   

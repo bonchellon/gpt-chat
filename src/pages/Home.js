@@ -27,19 +27,35 @@ const Home = () => {
     setChatHistory(prevHistory => [...prevHistory, message]);
   };
 
+  const clearChat = () => {
+    axios.post('/clear')
+      .then(() => {
+        setChatHistory([]);
+      })
+      .catch((error) => {
+        console.error('Error clearing chat history:', error);
+      });
+  };
+
   return (
     <div className="home flex flex-col h-screen">
       <header className="home-header flex justify-between items-center p-4 bg-gray-100 shadow-md">
-        <BotSelector selectedBot={selectedBot} setSelectedBot={setSelectedBot} />
-        <button className="clear-chat-button bg-red-500 text-white p-2 rounded" onClick={() => window.clearChat()}>
-          Clear Chat
-        </button>
+        <div className="container flex justify-between items-center">
+          <BotSelector selectedBot={selectedBot} setSelectedBot={setSelectedBot} />
+          <button className="clear-chat-button bg-red-500 text-white p-2 rounded" onClick={clearChat}>
+            Clear Chat
+          </button>
+        </div>
       </header>
       <main className="home-chat flex-1 overflow-y-auto p-4">
-        <Chat chatHistory={chatHistory} loading={loading} />
+        <div className="container">
+          <Chat chatHistory={chatHistory} loading={loading} />
+        </div>
       </main>
       <footer className="chat-input sticky bottom-0 w-full p-4 bg-white shadow-md">
-        <ChatInput selectedBot={selectedBot} addMessage={addMessage} setLoading={setLoading} />
+        <div className="container">
+          <ChatInput selectedBot={selectedBot} addMessage={addMessage} setLoading={setLoading} />
+        </div>
       </footer>
     </div>
   );
