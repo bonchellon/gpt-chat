@@ -16,7 +16,7 @@ const Chat = ({ chatHistory, loading }) => {
   }, [chatHistory, loading]);
 
   return (
-    <div className="chat-window-container">
+    <div className="chat-window">
       {chatHistory.map((chat, index) => (
         <div key={index} className={`mb-4 flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
           {chat.sender === 'bot' && (
