@@ -1,12 +1,13 @@
-.chat-window {
+
+  .chat-window-container {
+    flex: 1;
     background-color: #f0f0f0;
     border-radius: 0.5rem;
     padding: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    margin: auto;
-    flex: 1;
-    overflow-y: auto;
+    max-width: 100%; /* Ограничиваем максимальную ширину */
+    margin: auto; /* Центрируем контейнер */
+    overflow-y: auto; /* Прокрутка только при необходимости */
   }
   
   .mb-4 {
