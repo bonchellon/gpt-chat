@@ -1,51 +1,51 @@
 .home {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    align-items: center;
-    background-color: #ffffff;
-  }
-  
-  .home-header {
-    width: 100%;
-    max-width: 800px; /* Ограничиваем максимальную ширину */
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed; /* Фиксируем шапку */
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffffff;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .home-chat {
-    flex: 1;
-    width: 100%;
-    max-width: 800px; /* Ограничиваем максимальную ширину */
-    margin-top: 6rem; /* Отступ сверху, чтобы не перекрывать шапку */
-    margin-bottom: 1rem; /* Добавим отступ снизу */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .chat-input {
-    width: 100%;
-    max-width: 800px; /* Ограничиваем максимальную ширину */
-    padding: 1rem;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .container {
-    width: 100%;
-    max-width: 800px; /* Ограничиваем максимальную ширину */
-    margin: 0 auto; /* Центрируем контейнер */
-  }
-  
-  .clear-chat-button {
-    margin-left: 1rem;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.home-header {
+  width: 100%;
+  max-width: 800px; /* Ограничиваем максимальную ширину */
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed; /* Фиксируем шапку */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.home-chat {
+  flex: 1;
+  width: 100%;
+  max-width: 800px; /* Ограничиваем максимальную ширину */
+  padding-top: 7rem; /* Увеличиваем отступ сверху, чтобы не перекрывать шапку */
+  margin-bottom: 1rem; /* Добавим отступ снизу */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Добавляем прокрутку при переполнении */
+}
+
+.chat-input {
+  width: 100%;
+  max-width: 800px; /* Ограничиваем максимальную ширину */
+  padding: 1rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  width: 100%;
+  max-width: 800px; /* Ограничиваем максимальную ширину */
+  margin: 0 auto; /* Центрируем контейнер */
+}
+
+.clear-chat-button {
+  margin-left: 1rem;
+}

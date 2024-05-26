@@ -47,7 +47,7 @@ const Home = () => {
           </button>
         </div>
       </header>
-      <main className="home-chat flex-1">
+      <main className="home-chat flex-1 overflow-y-auto">
         <div className="container h-full">
           <Chat chatHistory={chatHistory} loading={loading} />
         </div>
